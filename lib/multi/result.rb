@@ -1,32 +1,32 @@
 class Multi
   class Result
-    attr_reader :changes, :reason, :last
+    attr_reader :changes, :failed_value, :failed_operation
 
     def initialize
       @changes = {}
-      @reason = nil
-      @last = nil
+      @failed_value = nil
+      @failed_operation = nil
     end
 
-    def [](step)
-      changes[step]
+    def [](operation)
+      changes[operation]
     end
 
-    def []=(step, value)
-      changes[step] = value
+    def []=(operation, value)
+      changes[operation] = value
     end
 
-    def fail(step, reason)
-      @reason = reason
-      @last = step
+    def fail(operation, value)
+      @failed_value = value
+      @failed_operation = operation
     end
 
-    def failure?
+    def failed?
       !success?
     end
 
     def success?
-      reason.nil?
+      failed_operation.nil?
     end
   end
 end

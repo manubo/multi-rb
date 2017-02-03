@@ -7,10 +7,10 @@ describe "Multi" do
       .run(:ok_step) do
         :foo
       end
-      .done
+      .commit
 
     assert result.success?
-    refute result.failure?
+    refute result.failed?
     assert_equal :foo, result[:ok_step]
   end
 
@@ -22,12 +22,12 @@ describe "Multi" do
       .run(:fail_step) do
         throw :fail, :error
       end
-      .done
+      .commit
 
     refute result.success?
-    assert result.failure?
-    assert_equal :error, result.reason
-    assert_equal :fail_step, result.last
+    assert result.failed?
+    assert_equal :error, result.failed_value
+    assert_equal :fail_step, result.failed_operation
     assert_equal :foo, result[:ok_step]
     assert_equal({ok_step: :foo}, result.changes)
   end
