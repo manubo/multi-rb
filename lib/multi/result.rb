@@ -16,9 +16,15 @@ class Multi
       changes[operation] = value
     end
 
+    def maybe_fail(operation, value)
+      return self if value.nil?
+      fail(operation, value)
+    end
+
     def fail(operation, value)
       @failed_value = value
       @failed_operation = operation
+      self
     end
 
     def failed?

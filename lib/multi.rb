@@ -18,16 +18,14 @@ class Multi
   end
 
   def commit
-    @operations.each do |operation, callable|
-      success = false
-      value = catch(:fail) do
+    current_operation = nil
+    failed_value = catch(:fail)  do
+      failed_operation = @operations.each do |operation, callable|
+        current_operation = operation
         result[operation] = callable.call(result.changes)
-        success = true
       end
-      next if success
-      result.fail(operation, value)
-      break
+      nil
     end
-    result
+    result.maybe_fail(current_operation, failed_value)
   end
 end
